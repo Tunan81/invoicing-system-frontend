@@ -8,6 +8,9 @@
         />
       </template>
       <a-table :columns="columns" :data="data" style="margin-top: 0px">
+        <template #createTime="{ record }">
+          {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
+        </template>
         <template #optional="{ record }">
           <a-space>
             <a-button type="primary" @click="doUpdate(record)">修改</a-button>
@@ -17,16 +20,34 @@
       </a-table>
     </a-card>
   </div>
+  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
+    <template #title>修改用户信息</template>
+    <a-form :model="form">
+      <a-form-item label="用户名">
+        <a-input v-model="form.userName" placeholder="请输入用户名"></a-input>
+      </a-form-item>
+      <a-form-item label="个人简介">
+        <a-input v-model="form.userProfile" placeholder="请输入密码"></a-input>
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { deleteUser, getSaleList, getUserList } from "@/api/user";
-import axios from "axios";
+import { deleteUser, getUserList, updateUser } from "@/api/user";
 import message from "@arco-design/web-vue/es/message";
+import moment from "moment";
 
-const show = ref(true);
+const visible = ref(false);
 
 const data = ref([]);
+
+// 新增一个变量，表示当前操作类型，默认为空（即添加用户）
+const operationType = ref("");
+const form = ref({
+  userName: "",
+  userProfile: "",
+});
 
 const columns = [
   {
@@ -44,7 +65,7 @@ const columns = [
   },
   {
     title: "创建时间",
-    dataIndex: "createTime",
+    slotName: "createTime",
   },
   {
     title: "操作",
@@ -78,6 +99,28 @@ const doDelete = async (record) => {
 onMounted(() => {
   getUser();
 });
+
+const doUpdate = (record) => {
+  operationType.value = "edit";
+  visible.value = true;
+  form.value = { ...record };
+};
+
+const handleOk = () => {
+  updateUser(form.value).then((res) => {
+    if (res.code === 0) {
+      message.success("修改成功");
+      getUser();
+    } else {
+      message.error("修改失败" + res.message);
+    }
+  });
+  visible.value = false;
+};
+
+const handleCancel = () => {
+  visible.value = false;
+};
 </script>
 
 <style scoped>

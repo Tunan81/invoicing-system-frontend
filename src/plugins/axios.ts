@@ -1,5 +1,6 @@
 import axios from "axios";
 //创建axios实例
+axios.defaults.withCredentials = true;
 const service = axios.create({
   baseURL: "http://localhost:8080", //请求的基础路径
   timeout: 5000, //超时时间

@@ -7,7 +7,6 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
     name: "用户",
-    //component: () => import("@/layouts/UserLayout.vue"),
     children: [
       {
         path: "/user/login",
@@ -40,6 +39,30 @@ export const routes: Array<RouteRecordRaw> = [
     meta: {
       layout: BasicLayout,
       access: AccessEnum.ADMIN,
+    },
+  },
+  {
+    path: "/purchase",
+    name: "采购管理",
+    component: () => import("@/views/purchase/purchaseView.vue"),
+    meta: {
+      layout: BasicLayout,
+    },
+  },
+  {
+    path: "/sale",
+    name: "销售管理",
+    component: () => import("@/views/sale/saleView.vue"),
+    meta: {
+      layout: BasicLayout,
+    },
+  },
+  {
+    path: "/product",
+    name: "库存管理",
+    component: () => import("@/views/product/productView.vue"),
+    meta: {
+      layout: BasicLayout,
     },
   },
   {

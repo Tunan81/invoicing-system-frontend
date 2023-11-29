@@ -23,9 +23,13 @@
             <IconCalendar></IconCalendar>
             进货管理
           </a-menu-item>
-          <a-menu-item key="sales">
+          <a-menu-item key="sale">
             <IconCalendar></IconCalendar>
             销售管理
+          </a-menu-item>
+          <a-menu-item key="product">
+            <IconCalendar></IconCalendar>
+            产品管理
           </a-menu-item>
         </a-menu>
         <!-- trigger -->

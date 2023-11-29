@@ -1,5 +1,6 @@
 import { StoreOptions } from "vuex";
 import AccessEnum from "@/access/accessEnum";
+import { getLoginUser, login } from "@/api/user";
 
 export default {
   namespaced: true,
@@ -9,18 +10,28 @@ export default {
     },
   }),
   actions: {
-    // async getLoginUser({ commit, state }, payload) {
-    //   //从后端获取登录用户信息
-    //   const res = await UserControllerService.getLoginUserUsingGet();
-    //   if (res.code === 0) {
-    //     commit("updateUser", res.data);
-    //   } else {
-    //     commit("updateUser", {
-    //       ...state.loginUser,
-    //       userRole: AccessEnum.NOT_LOGIN,
-    //     });
-    //   }
-    // },
+    async getLoginUser({ commit, state }, payload) {
+      //从后端获取登录用户信息
+      getLoginUser().then((res) => {
+        if (res.code === 0) {
+          commit("updateUser", res.data);
+        } else {
+          commit("updateUser", {
+            ...state.loginUser,
+            userRole: AccessEnum.NOT_LOGIN,
+          });
+        }
+      });
+      // const res = await UserControllerService.getLoginUserUsingGet();
+      // if (res.code === 0) {
+      //   commit("updateUser", res.data);
+      // } else {
+      //   commit("updateUser", {
+      //     ...state.loginUser,
+      //     userRole: AccessEnum.NOT_LOGIN,
+      //   });
+      // }
+    },
   },
   mutations: {
     updateUser(state, payload) {

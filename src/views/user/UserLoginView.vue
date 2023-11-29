@@ -37,11 +37,12 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import store from "@/store";
 import message from "@arco-design/web-vue/es/message";
 import { login } from "@/api/user";
+import { useStore } from "vuex";
 
 const router = useRouter();
+const store = useStore();
 
 /**
  * 表单数据
@@ -55,8 +56,9 @@ const form = reactive({
  * 提交表单
  */
 const handleSubmit = async () => {
-  login(form).then((res) => {
+  login(form).then(async (res) => {
     if (res.code === 0) {
+      await store.dispatch("user/getLoginUser");
       message.success("登录成功");
       router.push({
         path: "/",
@@ -65,17 +67,6 @@ const handleSubmit = async () => {
       message.error("登录失败" + res.message);
     }
   });
-  // const res = await UserControllerService.userLoginUsingPost(form);
-  // if (res.code === 0) {
-  //   await store.dispatch("user/getLoginUser");
-  //   // 登录成功，跳转到首页
-  //   await router.push({
-  //     path: "/",
-  //     replace: true,
-  //   });
-  // } else {
-  //   message.error("登录失败" + res.message);
-  // }
 };
 </script>
 <style scoped>

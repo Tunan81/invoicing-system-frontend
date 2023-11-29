@@ -35,3 +35,20 @@ export function getUserList(data: object) {
     data,
   });
 }
+
+// 获取当前登录用户
+export function getLoginUser() {
+  return service({
+    url: "/user/get/login",
+    method: "get",
+  });
+}
+
+// 修改用户信息
+export function updateUser(data: object) {
+  return service({
+    url: "/user/update",
+    method: "post",
+    data,
+  });
+}
