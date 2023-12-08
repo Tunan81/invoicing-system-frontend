@@ -8,3 +8,12 @@ export function getPurchaseList(data: object) {
     data,
   });
 }
+
+// 添加采购信息
+export function addPurchase(data: object) {
+  return service({
+    url: "/purchase/add",
+    method: "post",
+    data,
+  });
+}

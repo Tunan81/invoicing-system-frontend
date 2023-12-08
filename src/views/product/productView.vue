@@ -19,12 +19,12 @@
             {{ record.stockQuantity }}
           </a-tag>
         </template>
-        <!--        <template #optional="{ record }">-->
-        <!--          <a-space>-->
-        <!--            <a-button type="primary" @click="doUpdate(record)">修改</a-button>-->
-        <!--            <a-button status="danger" @click="doDelete(record)">删除</a-button>-->
-        <!--          </a-space>-->
-        <!--        </template>-->
+        <template #optional="{ record }">
+          <a-space>
+            <a-button type="primary" @click="doUpdate(record)">修改</a-button>
+            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+          </a-space>
+        </template>
       </a-table>
     </a-card>
   </div>
@@ -58,18 +58,18 @@ const columns = [
     dataIndex: "stockQuantity",
     slotName: "stockQuantity",
   },
-  // {
-  //   title: "操作",
-  //   width: 200,
-  //   slotName: "optional",
-  // },
+  {
+    title: "操作",
+    width: 200,
+    slotName: "optional",
+  },
 ];
-// const doUpdate = (record: any) => {
-//   console.log(record);
-// };
-// const doDelete = (record: any) => {
-//   console.log(record);
-// };
+const doUpdate = (record: any) => {
+  console.log(record);
+};
+const doDelete = (record: any) => {
+  console.log(record);
+};
 const query = {
   pageNumber: 1,
   pageSize: 10,

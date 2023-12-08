@@ -71,6 +71,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/notFound/NotFoundView.vue"),
     meta: {
       hideInMenu: true,
+      layout: BasicLayout,
     },
   },
   {

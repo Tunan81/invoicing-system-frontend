@@ -26,47 +26,52 @@
   <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
     <template #title>添加进货信息</template>
     <a-form :model="form">
-      <a-form-item lable="商品名称">
+      <a-form-item label="商品名称" field="productName">
         <a-input
           v-model="form.productName"
           placeholder="请输入商品名称"
         ></a-input>
       </a-form-item>
-      <a-form-item lable="采购数量">
-        <a-input
+      <a-form-item label="采购数量" field="purchaseQuantity">
+        <a-input-number
           v-model="form.purchaseQuantity"
           placeholder="请输入采购数量"
-        ></a-input>
+          class="input-demo"
+          :min="0"
+        />
       </a-form-item>
-      <a-form-item lable="采购总价">
-        <a-input
+      <a-form-item label="采购总价" field="totalCost">
+        <a-input-number
           v-model="form.totalCost"
-          placeholder="请输入采购总价"
-        ></a-input>
+          placeholder="请输入总价"
+          class="input-demo"
+          :min="0"
+        />
       </a-form-item>
-      <a-form-item lable="采购时间">
-        <a-input
-          v-model="form.purchaseTime"
-          placeholder="请输入采购时间"
-        ></a-input>
+      <a-form-item label="采购时间" field="purchaseTime">
+        <a-date-picker v-model="form.purchaseTime" style="width: 200px" />
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getPurchaseList } from "@/api/purchase";
+import { getPurchaseList, addPurchase } from "@/api/purchase";
 import moment from "moment";
+import { Message } from "@arco-design/web-vue";
+import { useStore } from "vuex";
 
 const data = ref([]);
 
 const visible = ref(false);
+const store = useStore();
+
 /**
- * 采购信息表单
+ * 采购信息表单s
  */
 const form = ref({
   productName: "",
-  userId: "",
+  userId: store.state.user?.loginUser?.id,
   purchaseQuantity: "",
   totalCost: "",
   purchaseTime: "",
@@ -83,16 +88,16 @@ const columns = [
     dataIndex: "userName",
   },
   {
-    title: "采购时间",
-    slotName: "purchaseTime",
-  },
-  {
     title: "采购数量",
     dataIndex: "purchaseQuantity",
   },
   {
     title: "采购总价",
     dataIndex: "totalCost",
+  },
+  {
+    title: "采购时间",
+    slotName: "purchaseTime",
   },
   {
     title: "操作",
@@ -113,24 +118,39 @@ const query = {
   pageSize: 10,
 };
 
-const getSale = async () => {
+const getPurchase = async () => {
   const res = await getPurchaseList(query);
   data.value = res.data.records;
 };
+
 onMounted(() => {
-  getSale();
+  getPurchase();
 });
 const doAdd = () => {
   visible.value = true;
 };
 
 const handleOk = () => {
-  console.log("ok");
+  addPurchase(form.value).then((res) => {
+    if (res.code === 0) {
+      Message.success("添加成功");
+      getPurchase();
+    } else {
+      Message.error("添加失败");
+    }
+  });
   visible.value = false;
 };
 
 const handleCancel = () => {
-  console.log("cancel");
+  // 清空表单
+  form.value = {
+    productName: "",
+    userId: store.state.user?.loginUser?.id,
+    purchaseQuantity: "",
+    totalCost: "",
+    purchaseTime: "",
+  };
   visible.value = false;
 };
 </script>
