@@ -6,37 +6,14 @@
           <span>进销存管理系统</span>
         </div>
         <a-menu
-          :default-open-keys="['1']"
-          :default-selected-keys="['home']"
           :style="{ width: '100%' }"
-          @menu-item-click="onClickMenuItem"
+          :selected-keys="selectedKeys"
+          @menu-item-click="doMenuClick"
         >
-          <a-menu-item key="/">
-            <IconHome></IconHome>
-            主页
-          </a-menu-item>
-          <a-menu-item key="userManage">
-            <IconCalendar></IconCalendar>
-            用户管理
-          </a-menu-item>
-          <a-menu-item key="purchase">
-            <IconCalendar></IconCalendar>
-            进货管理
-          </a-menu-item>
-          <a-menu-item key="sale">
-            <IconCalendar></IconCalendar>
-            销售管理
-          </a-menu-item>
-          <a-menu-item key="product">
-            <IconCalendar></IconCalendar>
-            产品管理
+          <a-menu-item v-for="item in visibleRoutes" :key="item.path"
+            >{{ item.name }}
           </a-menu-item>
         </a-menu>
-        <!-- trigger -->
-        <template #trigger="{ collapsed }">
-          <IconCaretRight v-if="collapsed"></IconCaretRight>
-          <IconCaretLeft v-else></IconCaretLeft>
-        </template>
       </a-layout-sider>
       <a-layout>
         <a-layout-header style="padding-left: 20px">
@@ -109,20 +86,40 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import {
-  IconCaretRight,
-  IconCaretLeft,
-  IconHome,
-  IconCalendar,
-} from "@arco-design/web-vue/es/icon";
 import { useStore } from "vuex";
+import { computed, ref } from "vue";
+import checkAccess from "@/access/checkAccess";
+import { routes } from "@/router/routes";
 
 const router = useRouter();
 const store = useStore();
 
-const onClickMenuItem = (key) => {
-  console.log(key);
-  router.push({ path: key });
+const user = store.state.user;
+
+// 过滤掉隐藏的菜单项
+const visibleRoutes = computed(() => {
+  const loginUser = user.loginUser;
+  return routes.filter((item, index) => {
+    if (item.meta?.hideInMenu) {
+      return false;
+    }
+    return checkAccess(loginUser, item.meta?.access);
+  });
+});
+
+// 默认主页
+const selectedKeys = ref(["/"]);
+
+// 路由跳转后，更新选中的菜单项
+router.afterEach((to, from, failuere) => {
+  selectedKeys.value = [to.path];
+});
+
+// 菜单点击事件
+const doMenuClick = (key) => {
+  router.push({
+    path: key,
+  });
 };
 
 // 登录

@@ -1,6 +1,6 @@
 import { StoreOptions } from "vuex";
 import AccessEnum from "@/access/accessEnum";
-import { getLoginUser, login } from "@/api/user";
+import { getLoginUser } from "@/api/user";
 
 export default {
   namespaced: true,
@@ -22,15 +22,6 @@ export default {
           });
         }
       });
-      // const res = await UserControllerService.getLoginUserUsingGet();
-      // if (res.code === 0) {
-      //   commit("updateUser", res.data);
-      // } else {
-      //   commit("updateUser", {
-      //     ...state.loginUser,
-      //     userRole: AccessEnum.NOT_LOGIN,
-      //   });
-      // }
     },
   },
   mutations: {

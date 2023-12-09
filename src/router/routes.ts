@@ -47,6 +47,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/purchase/purchaseView.vue"),
     meta: {
       layout: BasicLayout,
+      access: AccessEnum.ADMIN,
     },
   },
   {
@@ -55,6 +56,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/sale/saleView.vue"),
     meta: {
       layout: BasicLayout,
+      access: AccessEnum.ADMIN,
     },
   },
   {
