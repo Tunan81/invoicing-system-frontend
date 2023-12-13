@@ -10,7 +10,7 @@
           placeholder="Please enter something"
         />
       </template>
-      <a-table :columns="columns" :data="data" style="margin-top: 0px">
+      <a-table :columns="columns" :data="data" style="margin-top: 0">
         <template #purchaseTime="{ record }">
           {{ moment(record.purchaseTime).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
