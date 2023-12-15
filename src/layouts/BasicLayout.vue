@@ -18,7 +18,7 @@
       <a-layout>
         <a-layout-header>
           <a-row class="grid-demo">
-            <a-col flex="150px" style="flex-direction: column-reverse">
+            <a-col flex="150px" style="margin-left: 89%">
               <div
                 v-if="store.state.user?.loginUser.userName !== '未登录'"
                 style="min-width: 200px"
