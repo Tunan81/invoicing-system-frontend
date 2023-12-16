@@ -3,7 +3,7 @@
     <a-card title="进货列表" :bordered="false">
       <template #extra>
         <a-button type="dashed" status="success" @click="doAdd"
-          >添加进货信息
+          >新增采购订单
         </a-button>
         <a-input-search
           style="width: 200px; margin-left: 10px"
@@ -24,7 +24,7 @@
     </a-card>
   </div>
   <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
-    <template #title>添加进货信息</template>
+    <template #title>{{ isAdding ? "添加" : "修改" }}进货信息</template>
     <a-form :model="form">
       <a-form-item label="商品名称" field="productName">
         <a-input
@@ -62,6 +62,7 @@ import { Message } from "@arco-design/web-vue";
 import { useStore } from "vuex";
 
 const data = ref([]);
+const isAdding = ref(true); // 默认为新增操作
 
 const visible = ref(false);
 const store = useStore();
@@ -107,10 +108,14 @@ const columns = [
 ];
 
 const doUpdate = (record: any) => {
-  console.log(record);
+  // 设置表单值为当前记录，用于修改操作
+  form.value = { ...record };
+  isAdding.value = false; // 将操作类型设置为修改
+  visible.value = true; // 显示弹框
 };
+
 const doDelete = (record: any) => {
-  console.log(record);
+  console.log();
 };
 
 const query = {
@@ -126,20 +131,39 @@ const getPurchase = async () => {
 onMounted(() => {
   getPurchase();
 });
+
 const doAdd = () => {
-  visible.value = true;
+  isAdding.value = true; // 将操作类型设置为新增
+  visible.value = true; // 显示弹框
 };
 
 const handleOk = () => {
-  addPurchase(form.value).then((res) => {
-    if (res.code === 0) {
-      Message.success("添加成功");
-      getPurchase();
-    } else {
-      Message.error("添加失败");
-    }
-  });
-  visible.value = false;
+  if (isAdding.value) {
+    // 如果是新增操作
+    addPurchase(form.value).then((res) => {
+      // 处理新增成功与失败逻辑
+      if (res.code === 0) {
+        Message.success("添加成功");
+        getPurchase();
+      } else {
+        Message.error("添加失败");
+      }
+    });
+  } else {
+    // 如果是修改操作
+    // 执行更新操作，类似添加操作的处理
+    // updatePurchase(form.value).then(...)
+  }
+
+  // 清空表单
+  form.value = {
+    productName: "",
+    userId: store.state.user?.loginUser?.id,
+    purchaseQuantity: "",
+    totalCost: "",
+    purchaseTime: "",
+  };
+  visible.value = false; // 关闭弹框
 };
 
 const handleCancel = () => {

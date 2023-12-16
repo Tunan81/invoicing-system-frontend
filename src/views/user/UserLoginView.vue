@@ -26,7 +26,7 @@
           long
           class="login-form-register-btn"
           style="background: #eeeeee"
-          href="/user/register"
+          @click="doRegister"
         >
           注册账号
         </a-button>
@@ -66,6 +66,11 @@ const handleSubmit = async () => {
     } else {
       message.error("登录失败" + res.message);
     }
+  });
+};
+const doRegister = () => {
+  router.push({
+    path: "/user/register",
   });
 };
 </script>

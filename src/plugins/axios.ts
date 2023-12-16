@@ -33,7 +33,7 @@ service.interceptors.response.use(
     const code = res.data.code; //code是后端的状态码
     if (code !== 0) {
       //请求失败（包括token失效，302，404...根据和后端约定好的状态码做出不同的处理）
-      Message.error("错误" + res.data);
+      Message.error(res.data.message);
       return Promise.reject(res);
     } else {
       //请求成功
