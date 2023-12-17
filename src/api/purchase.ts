@@ -17,3 +17,11 @@ export function addPurchase(data: object) {
     data,
   });
 }
+
+// 删除采购信息 @DeleteMapping("/delete/{purchaseId}")
+export function deletePurchase(purchaseId: string) {
+  return service({
+    url: `/purchase/delete/${purchaseId}`,
+    method: "delete",
+  });
+}

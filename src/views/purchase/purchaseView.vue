@@ -56,7 +56,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getPurchaseList, addPurchase } from "@/api/purchase";
+import { getPurchaseList, addPurchase, deletePurchase } from "@/api/purchase";
 import moment from "moment";
 import { Message } from "@arco-design/web-vue";
 import { useStore } from "vuex";
@@ -115,7 +115,14 @@ const doUpdate = (record: any) => {
 };
 
 const doDelete = (record: any) => {
-  console.log();
+  deletePurchase(record.purchaseId).then((res) => {
+    if (res.code === 0) {
+      Message.success("删除成功");
+      getPurchase();
+    } else {
+      Message.error("删除失败" + res.message);
+    }
+  });
 };
 
 const query = {

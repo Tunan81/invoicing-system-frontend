@@ -17,8 +17,15 @@
       </a-layout-sider>
       <a-layout>
         <a-layout-header>
-          <a-row class="grid-demo">
-            <a-col flex="150px" style="margin-left: 89%">
+          <a-row
+            class="grid-demo"
+            style="
+              display: flex;
+              flex-flow: row wrap;
+              flex-direction: row-reverse;
+            "
+          >
+            <a-col flex="150px">
               <div
                 v-if="store.state.user?.loginUser.userName !== '未登录'"
                 style="min-width: 200px"
