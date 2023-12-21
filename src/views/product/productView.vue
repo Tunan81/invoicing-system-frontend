@@ -2,12 +2,20 @@
   <div id="productView">
     <a-card title="产品列表" :bordered="false">
       <template #extra>
-        <a-input-search
-          :style="{ width: '320px' }"
-          placeholder="Please enter something"
-        />
+        <a-input-search :style="{ width: '320px' }" placeholder="请输入名称" />
       </template>
-      <a-table :columns="columns" :data="data" style="margin-top: 0px">
+      <a-table
+        :columns="columns"
+        :data="data"
+        :page-position="{
+          showTotal: true,
+          pageSize: query.pageSize,
+          current: query.pageNumber,
+          total,
+        }"
+        @page-change="onPageChange"
+        style="margin-top: 0px"
+      >
         <template #stockQuantity="{ record }">
           <a-tag v-if="record.stockQuantity >= 100" color="green">
             {{ record.stockQuantity }}
@@ -22,7 +30,13 @@
         <template #optional="{ record }">
           <a-space>
             <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+            <a-popconfirm
+              content="确认删除吗?"
+              type="error"
+              @ok="doDelete(record)"
+            >
+              <a-button status="danger"> 删除</a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -33,6 +47,11 @@
 import { onMounted, ref } from "vue";
 import message from "@arco-design/web-vue/es/message";
 import { getProductList } from "@/api/product";
+
+/**
+ * 总数
+ */
+const total = ref(0);
 
 const data = ref([]);
 const columns = [
@@ -70,19 +89,27 @@ const doUpdate = (record: any) => {
 const doDelete = (record: any) => {
   console.log(record);
 };
-const query = {
-  pageNumber: 1,
+const query = ref({
   pageSize: 10,
-};
+  pageNumber: 1,
+});
 
 const getProduct = async () => {
   const res = await getProductList(query);
   data.value = res.data.records;
+  total.value = res.data.total;
 };
 
 onMounted(() => {
   getProduct();
 });
+
+const onPageChange = (page: number) => {
+  query.value = {
+    ...query.value,
+    pageNumber: page,
+  };
+};
 </script>
 
 <style scoped>

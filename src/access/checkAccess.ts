@@ -17,6 +17,17 @@ const checkAccess = (loginUser: any, needAccess = AccessEnum.NOT_LOGIN) => {
       return false;
     }
   }
+  if (needAccess === AccessEnum.SALESMAN) {
+    return (
+      loginUserAccess == AccessEnum.SALESMAN ||
+      loginUserAccess == AccessEnum.ADMIN
+    );
+  }
+  if (needAccess === AccessEnum.BUYER) {
+    return (
+      loginUserAccess == AccessEnum.BUYER || loginUserAccess == AccessEnum.ADMIN
+    );
+  }
   if (needAccess === AccessEnum.ADMIN) {
     if (loginUserAccess !== AccessEnum.ADMIN) {
       return false;

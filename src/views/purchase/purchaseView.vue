@@ -7,17 +7,33 @@
         </a-button>
         <a-input-search
           style="width: 200px; margin-left: 10px"
-          placeholder="Please enter something"
+          placeholder="请输入名称"
         />
       </template>
-      <a-table :columns="columns" :data="data" style="margin-top: 0">
+      <a-table
+        :columns="columns"
+        :data="data"
+        :page-position="{
+          showTotal: true,
+          pageSize: query.pageSize,
+          current: query.pageNumber,
+          total,
+        }"
+        style="margin-top: 0"
+      >
         <template #purchaseTime="{ record }">
           {{ moment(record.purchaseTime).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
         <template #optional="{ record }">
           <a-space>
             <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+            <a-popconfirm
+              content="确认删除吗?"
+              type="error"
+              @ok="doDelete(record)"
+            >
+              <a-button status="danger"> 删除</a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -68,7 +84,12 @@ const visible = ref(false);
 const store = useStore();
 
 /**
- * 采购信息表单s
+ * 总数
+ */
+const total = ref(0);
+
+/**
+ * 采购信息表单
  */
 const form = ref({
   productName: "",
@@ -133,6 +154,7 @@ const query = {
 const getPurchase = async () => {
   const res = await getPurchaseList(query);
   data.value = res.data.records;
+  total.value = res.data.total;
 };
 
 onMounted(() => {

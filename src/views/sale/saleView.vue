@@ -7,17 +7,34 @@
         </a-button>
         <a-input-search
           style="width: 200px; margin-left: 10px"
-          placeholder="Please enter something"
+          placeholder="请输入名称"
         />
       </template>
-      <a-table :columns="columns" :data="data" style="margin-top: 0px">
+      <a-table
+        :columns="columns"
+        :data="data"
+        :page-position="{
+          showTotal: true,
+          pageSize: query.pageSize,
+          current: query.pageNumber,
+          total,
+        }"
+        @page-change="onPageChange"
+        style="margin-top: 0px"
+      >
         <template #saleDate="{ record }">
           {{ moment(record.saleDate).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
         <template #optional="{ record }">
           <a-space>
             <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+            <a-popconfirm
+              content="确认删除吗?"
+              type="error"
+              @ok="doDelete(record)"
+            >
+              <a-button status="danger"> 删除</a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -64,6 +81,11 @@ import { Message } from "@arco-design/web-vue";
 const store = useStore();
 const data = ref([]);
 const visible = ref(false);
+
+/**
+ * 总数
+ */
+const total = ref(0);
 const form = ref({
   productName: "",
   userName: store.state.user?.loginUser?.userName,
@@ -108,14 +130,15 @@ const doDelete = (record: any) => {
   console.log(record);
 };
 
-const query = {
+const query = ref({
   pageNumber: 1,
   pageSize: 10,
-};
+});
 
 const getSale = async () => {
   const res = await getSaleList(query);
   data.value = res.data.records;
+  total.value = res.data.total;
 };
 onMounted(() => {
   getSale();
@@ -147,6 +170,12 @@ const handleCancel = () => {
     saleDate: "",
   };
   visible.value = false;
+};
+const onPageChange = (page: number) => {
+  query.value = {
+    ...query.value,
+    pageNumber: page,
+  };
 };
 </script>
 

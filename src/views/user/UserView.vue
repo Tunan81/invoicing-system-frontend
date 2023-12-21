@@ -4,17 +4,34 @@
       <template #extra>
         <a-input-search
           :style="{ width: '320px' }"
-          placeholder="Please enter something"
+          placeholder="请输入用户名"
         />
       </template>
-      <a-table :columns="columns" :data="data" style="margin-top: 0px">
+      <a-table
+        :columns="columns"
+        :data="data"
+        :page-position="{
+          showTotal: true,
+          pageSize: query.pageSize,
+          current: query.pageNumber,
+          total,
+        }"
+        @page-change="onPageChange"
+        style="margin-top: 0px"
+      >
         <template #createTime="{ record }">
           {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
         </template>
         <template #optional="{ record }">
           <a-space>
             <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-            <a-button status="danger" @click="doDelete(record)">删除</a-button>
+            <a-popconfirm
+              content="确认删除吗?"
+              type="error"
+              @ok="doDelete(record)"
+            >
+              <a-button status="danger"> 删除</a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -41,6 +58,11 @@ import moment from "moment";
 const visible = ref(false);
 
 const data = ref([]);
+
+/**
+ * 总数
+ */
+const total = ref(0);
 
 // 新增一个变量，表示当前操作类型，默认为空（即添加用户）
 const operationType = ref("");
@@ -73,13 +95,14 @@ const columns = [
     slotName: "optional",
   },
 ];
-const query = {
+const query = ref({
   pageNumber: 1,
   pageSize: 10,
-};
+});
 const getUser = async () => {
   const res = await getUserList(query);
   data.value = res.data.records;
+  total.value = res.data.total;
 };
 
 const doDelete = async (record) => {
@@ -117,7 +140,6 @@ const handleOk = () => {
   });
   visible.value = false;
 };
-
 const handleCancel = () => {
   visible.value = false;
 };

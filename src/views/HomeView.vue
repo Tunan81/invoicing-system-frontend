@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1 style="margin: auto; margin-bottom: 20px">进销存管理系统</h1>
-    <div ref="main" style="height: 400px"></div>
+    <div ref="main" style="height: 400px; max-width: 90%; margin: 0 auto"></div>
   </div>
 </template>
 
