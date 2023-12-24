@@ -72,7 +72,12 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getPurchaseList, addPurchase, deletePurchase } from "@/api/purchase";
+import {
+  getPurchaseList,
+  addPurchase,
+  deletePurchase,
+  updatePurchase,
+} from "@/api/purchase";
 import moment from "moment";
 import { Message } from "@arco-design/web-vue";
 import { useStore } from "vuex";
@@ -179,9 +184,14 @@ const handleOk = () => {
       }
     });
   } else {
-    // 如果是修改操作
-    // 执行更新操作，类似添加操作的处理
-    // updatePurchase(form.value).then(...)
+    updatePurchase(form.value).then((res) => {
+      if (res.code === 0) {
+        Message.success("更新成功");
+        getPurchase();
+      } else {
+        Message.error("更新失败" + res.message);
+      }
+    });
   }
 
   // 清空表单

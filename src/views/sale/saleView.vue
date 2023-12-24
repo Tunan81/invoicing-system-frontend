@@ -70,10 +70,44 @@
       </a-form-item>
     </a-form>
   </a-modal>
+  <a-modal
+    v-model:visible="updateVisible"
+    @ok="handleUpdate"
+    @cancel="handleUpdateCancel"
+  >
+    <template #title>修改销售信息</template>
+    <a-form :model="updateForm">
+      <a-form-item label="商品名称" field="productName">
+        <a-input
+          v-model="updateForm.productName"
+          placeholder="请输入商品名称"
+        ></a-input>
+      </a-form-item>
+      <a-form-item label="销售数量" field="saleQuantity">
+        <a-input-number
+          v-model="updateForm.saleQuantity"
+          placeholder="请输入销售数量"
+          class="input-demo"
+          :min="0"
+        />
+      </a-form-item>
+      <a-form-item label="销售总价" field="saleTotal">
+        <a-input-number
+          v-model="updateForm.saleTotal"
+          placeholder="请输入总价"
+          class="input-demo"
+          :min="0"
+        />
+      </a-form-item>
+      <a-form-item label="销售时间" field="saleDate">
+        <a-date-picker v-model="updateForm.saleDate" style="width: 200px" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { addSale, getSaleList } from "@/api/sale";
+import { addSale, deleteSale, getSaleList, updateSale } from "@/api/sale";
 import moment from "moment";
 import { useStore } from "vuex";
 import { Message } from "@arco-design/web-vue";
@@ -81,6 +115,55 @@ import { Message } from "@arco-design/web-vue";
 const store = useStore();
 const data = ref([]);
 const visible = ref(false);
+
+// 新增更新销售信息相关的数据
+const updateVisible = ref(false);
+const updateForm = ref({
+  saleId: null,
+  productName: "",
+  saleQuantity: 0,
+  saleTotal: 0,
+  saleDate: "",
+});
+
+// 修改doUpdate方法以显示修改销售信息的弹窗
+const doUpdate = (record: any) => {
+  updateForm.value = {
+    saleId: record.saleId,
+    productName: record.productName,
+    saleQuantity: record.saleQuantity,
+    saleTotal: record.saleTotal,
+    saleDate: record.saleDate,
+  };
+  updateVisible.value = true;
+};
+
+// 处理更新销售信息的确认事件
+const handleUpdate = () => {
+  // 调用更新销售信息的接口
+  updateSale(updateForm.value).then((res) => {
+    if (res.code === 0) {
+      Message.success("更新成功");
+      getSale();
+      updateVisible.value = false;
+    } else {
+      Message.error("更新失败" + res.message);
+    }
+  });
+};
+
+// 处理取消更新销售信息的事件
+const handleUpdateCancel = () => {
+  // 关闭弹窗并清空表单数据
+  updateVisible.value = false;
+  updateForm.value = {
+    saleId: null,
+    productName: "",
+    saleQuantity: 0,
+    saleTotal: 0,
+    saleDate: "",
+  };
+};
 
 /**
  * 总数
@@ -123,11 +206,15 @@ const columns = [
   },
 ];
 
-const doUpdate = (record: any) => {
-  console.log(record);
-};
 const doDelete = (record: any) => {
-  console.log(record);
+  deleteSale(record.saleId).then((res) => {
+    if (res.code === 0) {
+      Message.success("删除成功");
+      getSale();
+    } else {
+      Message.error("删除失败" + res.message);
+    }
+  });
 };
 
 const query = ref({
@@ -140,6 +227,7 @@ const getSale = async () => {
   data.value = res.data.records;
   total.value = res.data.total;
 };
+
 onMounted(() => {
   getSale();
 });

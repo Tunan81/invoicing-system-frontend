@@ -25,3 +25,12 @@ export function deletePurchase(purchaseId: string) {
     method: "delete",
   });
 }
+
+// 修改采购信息
+export function updatePurchase(data: object) {
+  return service({
+    url: "/purchase/update",
+    method: "post",
+    data,
+  });
+}

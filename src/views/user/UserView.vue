@@ -17,7 +17,7 @@
           total,
         }"
         @page-change="onPageChange"
-        style="margin-top: 0px"
+        style="margin-top: 0"
       >
         <template #createTime="{ record }">
           {{ moment(record.createTime).format("YYYY-MM-DD HH:mm:ss") }}
@@ -44,7 +44,17 @@
         <a-input v-model="form.userName" placeholder="请输入用户名"></a-input>
       </a-form-item>
       <a-form-item label="个人简介">
-        <a-input v-model="form.userProfile" placeholder="请输入密码"></a-input>
+        <a-input v-model="form.userProfile" placeholder="请输入简介"></a-input>
+      </a-form-item>
+      <a-form-item>
+        <a-select v-model="form.userRole" placeholder="请选择角色">
+          <a-option
+            v-for="item of roleList"
+            :value="item.value"
+            :label="item.label"
+            :key="item.value"
+          />
+        </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -63,6 +73,25 @@ const data = ref([]);
  * 总数
  */
 const total = ref(0);
+
+const roleList = ref([
+  {
+    value: "admin",
+    label: "管理员",
+  },
+  {
+    value: "user",
+    label: "普通用户",
+  },
+  {
+    value: "buyer",
+    label: "采购员",
+  },
+  {
+    value: "seller",
+    label: "销售员",
+  },
+]);
 
 // 新增一个变量，表示当前操作类型，默认为空（即添加用户）
 const operationType = ref("");
