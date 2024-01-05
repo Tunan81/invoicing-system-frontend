@@ -65,7 +65,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/product/productView.vue"),
     meta: {
       layout: BasicLayout,
-      access: AccessEnum.ADMIN,
+      access: AccessEnum.USER,
     },
   },
   {

@@ -77,10 +77,7 @@
           </a-row>
         </a-layout-header>
         <a-layout style="padding: 0 24px">
-          <a-breadcrumb :style="{ margin: '16px 0' }">
-            <a-breadcrumb-item>主页</a-breadcrumb-item>
-            <a-breadcrumb-item>用户管理</a-breadcrumb-item>
-          </a-breadcrumb>
+          <a-breadcrumb :style="{ margin: '16px 0' }"> </a-breadcrumb>
           <a-layout-content>
             <router-view />
           </a-layout-content>

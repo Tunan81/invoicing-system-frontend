@@ -46,7 +46,7 @@
       <a-form-item label="个人简介">
         <a-input v-model="form.userProfile" placeholder="请输入简介"></a-input>
       </a-form-item>
-      <a-form-item>
+      <a-form-item label="角色">
         <a-select v-model="form.userRole" placeholder="请选择角色">
           <a-option
             v-for="item of roleList"

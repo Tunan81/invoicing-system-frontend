@@ -27,18 +27,18 @@
             {{ record.stockQuantity }}
           </a-tag>
         </template>
-        <template #optional="{ record }">
-          <a-space>
-            <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-            <a-popconfirm
-              content="确认删除吗?"
-              type="error"
-              @ok="doDelete(record)"
-            >
-              <a-button status="danger"> 删除</a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
+        <!--        <template #optional="{ record }">-->
+        <!--          <a-space>-->
+        <!--            <a-button type="primary" @click="doUpdate(record)">修改</a-button>-->
+        <!--            <a-popconfirm-->
+        <!--              content="确认删除吗?"-->
+        <!--              type="error"-->
+        <!--              @ok="doDelete(record)"-->
+        <!--            >-->
+        <!--              <a-button status="danger"> 删除</a-button>-->
+        <!--            </a-popconfirm>-->
+        <!--          </a-space>-->
+        <!--        </template>-->
       </a-table>
     </a-card>
   </div>
@@ -77,11 +77,11 @@ const columns = [
     dataIndex: "stockQuantity",
     slotName: "stockQuantity",
   },
-  {
-    title: "操作",
-    width: 200,
-    slotName: "optional",
-  },
+  // {
+  //   title: "操作",
+  //   width: 200,
+  //   slotName: "optional",
+  // },
 ];
 const doUpdate = (record: any) => {
   console.log(record);

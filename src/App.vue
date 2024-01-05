@@ -18,10 +18,6 @@ const layout = computed(() => route.meta.layout);
 const doInit = () => {
   console.log("init");
 };
-
-onMounted(() => {
-  doInit();
-});
 </script>
 
 <style>
