@@ -69,6 +69,15 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/provider",
+    name: "供应商管理",
+    component: () => import("@/views/ProviderView.vue"),
+    meta: {
+      layout: BasicLayout,
+      access: AccessEnum.USER,
+    },
+  },
+  {
     path: "/404",
     name: "404",
     component: () => import("@/views/notFound/NotFoundView.vue"),
